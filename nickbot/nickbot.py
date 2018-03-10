@@ -50,9 +50,21 @@ def handle_command(command, channel):
     # This is where you start to implement more commands!
     if command.startswith("nickrank"):
         ret = watcher.league.positions_by_summoner('na1',23497400)
-        game = watcher.match.by_id(region,2736399538)
-        response = "Nick's rank is " + ret[0]['tier'] + " " + ret[0]['rank'] + '\n'+ "Nick has died " + str(stats.player_deaths_in_game(game,"Trojan Magnum")) + " In some random Varus game"
+        #game = watcher.match.by_id(region,2736399538)
+        #response = "Nick's rank is " + ret[0]['tier'] + " " + ret[0]['rank'] + '\n'+ "Nick has died " + str(stats.player_deaths_in_game(game,"Trojan Magnum")) + " In some random Varus game"
+    if command.startswith("nickdeaths"):
+        #Get 20 freaking games (THERE HAS TO BE A BETTER WAY TO DO THIS)
+        ids = []
+        games_recent = watcher.match.matchlist_by_account_recent(region,37595815)
+        for g_id in games_recent["matches"]:
+            ids.append(g_id['gameId'])
 
+        #Create a list of 20 game objects
+        games = []
+        for g_id in ids:
+            games.append(watcher.match.by_id(region,g_id))
+
+        response = "Nick has died " + str(stats.total_deaths_in_games(games,"Trojan Magnum")) + " times in " + str(len(ids)) + " games. Call the police."
     # Sends the response back to the channel
     slack_client.api_call(
         "chat.postMessage",
