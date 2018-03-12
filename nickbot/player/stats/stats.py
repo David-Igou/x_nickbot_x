@@ -1,4 +1,3 @@
-
 def player_deaths_in_game(game, player):
     playerid = ''
     for players in game['participantIdentities']:

@@ -4,7 +4,6 @@ import re
 import requests
 from slackclient import SlackClient
 from riotwatcher import RiotWatcher
-from stats import stats
 from player import Player
 
 # instantiate with Slack and Riot
@@ -64,6 +63,17 @@ def handle_command(command, channel):
     if command.startswith("summary"):
         if(command.split()[1] in playerdict):
             response = playerdict[command.split()[1]].summary()
+        else: response = "Player not found"
+
+    if command.startswith("pull"):
+        if(command.split()[1] in playerdict):
+            playerdict[command.split()[1]].getLastGames()
+            response = "Success? I didn't crash"
+        else: response = "Player not found"
+
+    if command.startswith("totaldeaths"):
+        if(command.split()[1] in playerdict):
+            response = str(playerdict[command.split()[1]].getTotalDeaths())
         else: response = "Player not found"
 
 # Sends the response back to the channel
