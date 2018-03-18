@@ -1,0 +1,22 @@
+---
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: nickbot
+  labels:
+    app: nickbot
+spec:
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: nickbot
+        tier: nickbot
+    spec:
+      containers:
+      - image: 127.0.0.1:30400/nickbot:latest
+        name: nickbot
+        ports:
+        - containerPort: 80
+name: nickbot
