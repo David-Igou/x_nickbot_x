@@ -1,5 +1,5 @@
   checkout scm
-
+/*
   sh "git rev-parse --short HEAD > commit-id"
 
   tag = readFile('commit-id').replace("\n", "").replace("\r", "")
@@ -7,15 +7,14 @@
   registryHost = "127.0.0.1:30400/"
   imageName = "${registryHost}${appName}:${tag}"
   env.BUILDIMG=imageName
-
+*/
   podTemplate(label: 'buildpod.${env.BUILDIMG}',
   containers: [containerTemplate(name: 'docker', image: 'docker:1.11', ttyEnabled: true, command: 'cat')],
   volumes: [hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')]) {
 
-
-    node(buildpod.${env.BUILDIMG}) {
+//    node(buildpod.${env.BUILDIMG}) {
+      node("Node") {
         git "https://github.com/David-Igou/x_nickbot_x/"
-
           stage('Build Docker image') {
             container('docker') {
               sh "docker build -t ${image} ."
