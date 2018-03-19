@@ -14,24 +14,26 @@
 
 
     node(buildpod.${env.BUILDIMG}) {
-      git "https://github.com/David-Igou/x_nickbot_x/"
-      stage('Build Docker image') {
-        git 'https://github.com/jenkinsci/docker-jnlp-slave.git'
-        container('docker') {
-          sh "docker build -t ${image} ."
-        }
+        git "https://github.com/David-Igou/x_nickbot_x/"
+
+          stage('Build Docker image') {
+            container('docker') {
+              sh "docker build -t ${image} ."
+              }
+          }
+          stage('Push Docker image') {
+            container('docker') {
+              sh "docker push ${imageName}""
+              }
+          }
+          stage('Deploy Docker image') {
+            container('docker') {
+              sh "sed 's#127.0.0.1:30400/nickbot:latest#'$BUILDIMG'#' nickbot/k8s/deployment.yaml | kubectl apply -f -"
+              sh "kubectl rollout status deployment/nickbot -n nickbot"
+              }
+          }
 
 
 
 
-
-
-  stage "Push"
-
-    nod
-    sh "docker push ${imageName}"
-
-  stage "Deploy"
-
-    sh "sed 's#127.0.0.1:30400/nickbot:latest#'$BUILDIMG'#' nickbot/k8s/deployment.yaml | kubectl apply -f -"
-    sh "kubectl rollout status deployment/nickbot -n nickbot"
+      }
