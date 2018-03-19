@@ -1,3 +1,6 @@
+    node(buildpod.${env.BUILDIMG}) {
+
+
   checkout scm
 
   sh "git rev-parse --short HEAD > commit-id"
@@ -12,8 +15,6 @@
   containers: [containerTemplate(name: 'docker', image: 'docker:1.11', ttyEnabled: true, command: 'cat')],
   volumes: [hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')])
 
-
-    node(buildpod.${env.BUILDIMG}) {
         git "https://github.com/David-Igou/x_nickbot_x/"
 
           stage('Build Docker image') {
