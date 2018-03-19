@@ -1,20 +1,15 @@
-  checkout scm
-/*
-  sh "git rev-parse --short HEAD > commit-id"
 
-  tag = readFile('commit-id').replace("\n", "").replace("\r", "")
-  appName = "nickbot"
-  registryHost = "127.0.0.1:30400/"
-  imageName = "${registryHost}${appName}:${tag}"
-  env.BUILDIMG=imageName
-*/
-  podTemplate(label: 'buildpod.${env.BUILDIMG}',
+  podTemplate(label: "Template",
   containers: [containerTemplate(name: 'docker', image: 'docker:1.11', ttyEnabled: true, command: 'cat')],
   volumes: [hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')]) {
 
-//    node(buildpod.${env.BUILDIMG}) {
-      node("Node") {
-        git "https://github.com/David-Igou/x_nickbot_x/"
+    node("Node") {
+        tag = readFile('commit-id').replace("\n", "").replace("\r", "")
+        appName = "nickbot"
+        registryHost = "127.0.0.1:30400/"
+        imageName = "${registryHost}${appName}:${tag}"
+        env.BUILDIMG=imageName
+        checkout scm
           stage('Build Docker image') {
             container('docker') {
               sh "docker build -t ${image} ."
@@ -27,8 +22,7 @@
           }
           stage('Deploy Docker image') {
             container('docker') {
-              sh "sed 's#127.0.0.1:30400/nickbot:latest#'$BUILDIMG'#' nickbot/k8s/deployment.yaml | kubectl apply -f -"
-              sh "kubectl rollout status deployment/nickbot -n nickbot"
+              echo "hello"
               }
           }
 
