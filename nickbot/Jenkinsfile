@@ -23,7 +23,7 @@
           }
           stage('Push Docker image') {
             container('docker') {
-              sh "docker push ${imageName}""
+              sh "docker push ${imageName}"
               }
           }
           stage('Deploy Docker image') {
