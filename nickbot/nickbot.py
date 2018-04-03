@@ -28,7 +28,7 @@ def parse_bot_commands(slack_events):
     for event in slack_events:
         print event
         if event["type"] == "message" and not "subtype" in event:
-            if event["user"] == "U4ZFYHTU4":
+            if event["user"] == "U4ZGCT41G":
                 slack_client.api_call("reactions.add",channel=event["channel"],name="wala",timestamp=event["ts"])
             user_id, message = parse_direct_mention(event["text"])
             if user_id == starterbot_id:
